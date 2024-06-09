@@ -1,0 +1,62 @@
+﻿@page "/run"
+@using SimplestDemo
+@rendermode InteractiveServer
+<PageTitle>Run</PageTitle>
+
+<h1>Run</h1>
+
+<button disabled="@isRunning" class="btn btn-primary" @onclick="RunMe">Run!</button>
+<p>
+    <code>
+        @result1
+    </code>
+</p>
+<p>
+    <code>
+    @result2
+    </code>
+</p>
+<p>
+    <code>
+    @result3
+    </code>
+</p>
+@code {
+    private bool isRunning = false;
+    private string result1 = string.Empty;
+    private string result2 = string.Empty;
+    private string result3 = string.Empty;
+    private async Task RunMe()
+    {
+        isRunning = true;
+        result1 = string.Empty;
+        result2 = string.Empty;
+        result3 = string.Empty;
+        StateHasChanged();
+        await Task.Run(async () =>
+        {
+            SimpleBenchmarkRun simpleBenchmarkRun = new("InitialDemo", 10);
+            RunStatistics runStatistics;
+            var data = Enumerable.Range(1, 5000000).Select(i => i /*+ Random.Shared.Next(100)*/);
+            runStatistics = simpleBenchmarkRun.Run(() =>
+            {
+                data.Where(i => i > 4000).Average();
+            }, "LINQ");
+            result1 = runStatistics.ToString();
+            await InvokeAsync(StateHasChanged);
+            runStatistics = simpleBenchmarkRun.Run(() =>
+            {
+                data.AsParallel().Where(i => i > 4000).Average();
+            }, "PLINQ");
+            result2 = runStatistics.ToString();
+            await InvokeAsync(StateHasChanged);
+            runStatistics = simpleBenchmarkRun.Run(() =>
+            {
+                data.AsParallel().WithDegreeOfParallelism(1).Where(i => i > 4000).Average();
+            }, "PLINQ(1)");
+            result3 = runStatistics.ToString();
+        });
+        isRunning = false;
+        StateHasChanged();
+    }
+}

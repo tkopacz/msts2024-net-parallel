@@ -1,0 +1,17 @@
+@LoadTestWebAPIAOT_HostAddress = http://localhost:5275
+
+GET {{LoadTestWebAPIAOT_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{LoadTestWebAPIAOT_HostAddress}}/todos/1
+Accept: application/json
+
+###
+GET {{LoadTestWebAPIAOT_HostAddress}}/long/
+Accept: application/json
+
+###
+GET {{LoadTestWebAPIAOT_HostAddress}}/longasync/
+Accept: application/json

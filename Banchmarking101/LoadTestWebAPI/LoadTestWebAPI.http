@@ -1,0 +1,12 @@
+@LoadTestWebAPI_HostAddress = http://localhost:5043
+
+GET {{LoadTestWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+GET {{LoadTestWebAPI_HostAddress}}/long/
+Accept: application/json
+
+###
+GET {{LoadTestWebAPI_HostAddress}}/longasync/
+Accept: application/json
